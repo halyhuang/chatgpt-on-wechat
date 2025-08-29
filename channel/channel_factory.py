@@ -37,8 +37,14 @@ def create_channel(channel_type) -> Channel:
         from channel.wechatcom.wechatcomapp_channel import WechatComAppChannel
         ch = WechatComAppChannel()
     elif channel_type == "wework":
-        from channel.wework.wework_channel import WeworkChannel
-        ch = WeworkChannel()
+        # 尝试使用原始wework实现，如果失败则使用简化版
+        try:
+            from channel.wework.wework_channel import WeworkChannel
+            ch = WeworkChannel()
+        except ImportError as e:
+            print(f"警告：无法导入原始wework实现 ({e})，使用简化版实现")
+            from channel.wework_simple.wework_simple_channel import WeworkSimpleChannel
+            ch = WeworkSimpleChannel()
     elif channel_type == const.FEISHU:
         from channel.feishu.feishu_channel import FeiShuChanel
         ch = FeiShuChanel()
